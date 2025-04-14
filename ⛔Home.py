@@ -5,7 +5,7 @@ import os
 from pydub import AudioSegment
 from pydub.utils import which
 
-st.set_page_config(page_title="Voice Recorder", page_icon="👋")
+st.set_page_config(page_title="Voice Recorder")
 
 st.title("Pengenalan Perintah Suara")
 
@@ -17,8 +17,6 @@ AudioSegment.ffprobe = which("ffprobe")
 # Debug: Cek apakah ffmpeg tersedia
 if not AudioSegment.converter:
     st.error("Error: ffmpeg tidak ditemukan. Pastikan ffmpeg sudah terinstall di environment.")
-
-st.title("🎤 Pengenalan Perintah Suara")
 
 # Upload file suara
 uploaded_file = st.file_uploader("📂 Upload file suara (M4A, MP3, WAV, OGG)", type=["m4a", "mp3", "wav", "ogg"])

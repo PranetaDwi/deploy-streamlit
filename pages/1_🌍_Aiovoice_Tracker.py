@@ -6,7 +6,7 @@ import gridfs
 from io import BytesIO
 from urllib.error import URLError
 
-st.set_page_config(page_title="Mapping Demo", page_icon="🌍")
+st.set_page_config(page_title="Aiovoice Tracker", page_icon="🌍")
 
 client = pymongo.MongoClient("mongodb+srv://neta_sic:neta_sic@backenddb.rfmwzg6.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
 db = client["locations"]
@@ -16,7 +16,7 @@ collection = db["realtime_location"]
 fs = gridfs.GridFS(db)
 
 # Ambil data lokasi dari MongoDB
-data_mongo = list(collection.find({}, {"_id": 0, "nama": 1, "lat": 1, "lon": 1}))
+data_mongo = list(collection.find({}, {"_id": 0, "device_id": 1, "lat": 1, "lon": 1}))
 
 # Ubah ke DataFrame
 df = pd.DataFrame(data_mongo)
@@ -47,16 +47,12 @@ if not df.empty and audio_files:
     # Menampilkan peta dengan pydeck
     st.title("Peta Lokasi dan Audio dari MongoDB Atlas")
 
-    st.subheader("Daerah Rawan Penculikan:")
+    st.subheader("Daerah Rawan Penculikan")
     st.pydeck_chart(pdk.Deck(
         layers=[scatter_layer],
         initial_view_state=view_state,
         map_style='mapbox://styles/mapbox/streets-v12'
     ))
-
-    # Menampilkan data lokasi dalam bentuk tabel
-    # st.write("Data Lokasi:")
-    # st.dataframe(df)
 
     # Menampilkan daftar file audio
     st.subheader("Daftar File Audio:")
