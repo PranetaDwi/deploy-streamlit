@@ -1,0 +1,8 @@
+streamlit 
+SpeechRecognition 
+pydub 
+ffmpeg-python
+pymongo
+pandas
+pydeck
+gridfs
