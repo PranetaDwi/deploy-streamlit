@@ -47,7 +47,7 @@ if not df.empty and audio_files:
     # Menampilkan peta dengan pydeck
     st.title("Peta Lokasi dan Audio dari MongoDB Atlas")
 
-    st.subheader("Daerah Rawan Penculikan")
+    st.subheader("Lokasi Realtime Aiovoice")
     st.pydeck_chart(pdk.Deck(
         layers=[scatter_layer],
         initial_view_state=view_state,
