@@ -8,6 +8,13 @@ from urllib.error import URLError
 
 st.set_page_config(page_title="Aiovoice Tracker", page_icon="🌍")
 
+if 'device_id' not in st.session_state:
+    st.session_state['device_id'] = None
+
+if st.session_state['device_id'] is None:
+    st.warning("Silahkan login dahulu untuk melanjutkan")
+    st.stop() 
+
 client = pymongo.MongoClient("mongodb+srv://neta_sic:neta_sic@backenddb.rfmwzg6.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
 db = client["locations"]
 

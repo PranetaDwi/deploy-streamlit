@@ -5,16 +5,14 @@ import os
 from pydub import AudioSegment
 from pydub.utils import which
 
-st.set_page_config(page_title="Voice Recorder")
+st.set_page_config(page_title="Voice Recorder", layout="centered")
 
 st.title("Pengenalan Perintah Suara")
 
-# Pastikan ffmpeg dikenali oleh pydub
 AudioSegment.converter = which("ffmpeg")
 AudioSegment.ffmpeg = which("ffmpeg")
 AudioSegment.ffprobe = which("ffprobe")
 
-# Debug: Cek apakah ffmpeg tersedia
 if not AudioSegment.converter:
     st.error("Error: ffmpeg tidak ditemukan. Pastikan ffmpeg sudah terinstall di environment.")
 
@@ -57,3 +55,4 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"Terjadi kesalahan: {e}")
+

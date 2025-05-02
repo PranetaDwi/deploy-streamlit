@@ -8,11 +8,35 @@ app = Flask(__name__)
 # Koneksi ke MongoDB
 client = MongoClient("mongodb+srv://neta_sic:neta_sic@backenddb.rfmwzg6.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
 db = client["locations"]
+users_collection = db["users"]
 realtime_collection = db["realtime_location"]
 vulnerable_location_collection = db["vulnerable_location"]
 
 # FS Grid
 fs = gridfs.GridFS(db)
+
+@app.route('/register', methods=['POST'])
+def register():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    device_id = request.form.get('device_id')
+
+    if not email:
+        return {'message': 'Email tidak boleh kosong'}, 400
+    if not password:
+        return {'message': 'Password tidak boleh kosong'}, 400
+    if not device_id:
+        return {'message': 'Device ID tidak boleh kosong'}, 400
+
+    result = users_collection.insert_one({
+        'device_id': device_id,
+        'email': email,
+        'password': password,
+        'timestamp': datetime.datetime.utcnow()
+    })
+
+    return {'message': 'Berhasil mengirim data', 'Email':str(email), "device_id":str(device_id)}, 200
+
 
 @app.route('/upload', methods=['POST'])
 def upload_audio():
