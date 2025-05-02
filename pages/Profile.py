@@ -2,6 +2,7 @@ import streamlit as st
 import pymongo
 import datetime
 import time
+import streamlit.components.v1 as components
 
 # Koneksi ke MongoDB
 client = pymongo.MongoClient("mongodb+srv://neta_sic:neta_sic@backenddb.rfmwzg6.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
@@ -63,7 +64,7 @@ def show_login_form():
                     st.success(f"Selamat datang, {login_email}!")
                     st.rerun()
                 else:
-                    st.warning("Email atau password salah!")
+                    st.error("Email atau password salah!")
 
 # Fungsi untuk menampilkan form register
 def show_register_form():
@@ -120,14 +121,55 @@ def show_device_id_form():
 # Fungsi untuk menampilkan profil
 def show_profile():
     device_id = st.session_state.get('device_id', 'Unknown Device')
-    st.write(f"Selamat datang, {device_id}!")
-    st.write(f"ID Alat: {device_id}")
+
+    # Tambahkan kotak simpel
+    st.markdown("""
+        <style>
+        .simple-box {
+            border: 1px solid #cccccc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .simple-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        .simple-box p {
+            margin: 0;
+            font-size: 16px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Tampilkan kotak
+    st.markdown(f"""
+        <div class="simple-box">
+            <h3>👤Selamat datang, {st.session_state['email']}!</h3>
+            <h3><strong>🔦 ID Alat: {device_id}</strong></h3>
+        </div>
+    """, unsafe_allow_html=True)
 
 def key_options():
     # Inisialisasi session state jika belum ada
     user = users_collection.find_one({'email': st.session_state['email']})
+    
     if 'key_option' not in st.session_state:
         st.session_state['key_option'] = user['key_option']
+    
+    # Menampilkan informasi tentang kata kunci yang dipilih
+    st.markdown(
+        f"""
+        <div style="border: 2px solid green; padding: 10px; border-radius: 10px; width: fit-content; margin-bottom:40px;">
+            <h4 style="color:green;">Kata Kunci: "{user["key_option"]}"</h4>
+            <p>Ucapkan kata kunci di atas untuk mengaktifkan alat</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+    st.info("Pilih salah satu kata berikut untuk edit kata kunci:")
 
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
@@ -145,18 +187,8 @@ def key_options():
         if st.button("Ayolah", use_container_width=True):
             st.session_state['key_option'] = 'ayolah' 
 
-    # Menampilkan pilihan yang dipilih
-    st.markdown(
-        f"""
-        <div style="border: 2px solid red; padding: 10px; background-color: #f9f9f9; border-radius: 10px; width: fit-content; margin-bottom:20px">
-            <h4 style="color:red;">Kata Kunci: {st.session_state['key_option']}</h4>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
     # Tombol untuk menyimpan pilihan
-    if st.button("Save"):
+    if st.button("Update kata kunci", use_container_width=True):
         # Mengupdate pilihan yang dipilih ke database MongoDB berdasarkan email atau device_id
         user = users_collection.find_one({'email': st.session_state['email']})  # Ganti dengan email atau identifier lainnya
         if user:
@@ -167,6 +199,7 @@ def key_options():
             )
             if result.modified_count > 0:
                 st.success(f"Pilihan '{st.session_state['key_option']}' berhasil disimpan!")
+                st.rerun()
             else:
                 st.error("Tidak ada perubahan yang disimpan.")
         else:
