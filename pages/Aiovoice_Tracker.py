@@ -5,6 +5,8 @@ import pydeck as pdk
 import gridfs
 from io import BytesIO
 from urllib.error import URLError
+from datetime import datetime
+import time
 
 st.set_page_config(page_title="Aiovoice Tracker", page_icon="🌍")
 
@@ -108,8 +110,23 @@ if audio_files:
 
     for audio in audio_files:
         audio_data = audio.read()
-        st.markdown(f"**{audio.filename}**")
+
+        formatted_time = audio.uploadDate.strftime("%Y-%m-%d %H:%M")
+
+        col1, col2 = st.columns([1, 1])
+        # Kolom pertama (rata kiri)
+        with col1:
+            st.markdown(f"<div style='text-align: left; margin-bottom:10px;'>🎙️ {audio.filename}</div>", unsafe_allow_html=True)
+
+        # Kolom kedua (rata kanan)
+        with col2:
+            st.markdown(f"<div style='text-align: right; margin-bottom:10px;'>📅 {formatted_time}</div>", unsafe_allow_html=True)
+
         st.audio(audio_data, format="audio/mp3")
 else:
     st.info("Belum ada file audio yang tersimpan.")
 
+
+# while True:
+#     st.rerun()
+#     time.sleep(5)
