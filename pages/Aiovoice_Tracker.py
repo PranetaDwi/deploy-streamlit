@@ -97,7 +97,7 @@ else:
 
 # Tampilkan peta (selalu muncul meskipun kosong)
 # --- Peta Lokasi ---
-st.subheader("Daerah Rawan Penculikan")
+st.subheader("Daerah Rawan")
 st.pydeck_chart(pdk.Deck(
     layers=[vulnerable_scatter],
     initial_view_state=view_state,
