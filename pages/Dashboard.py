@@ -117,9 +117,13 @@ def card1():
         formatted_time = audio_file.uploadDate.strftime("%Y-%m-%d %H:%M")
 
         st.markdown(f"<p style='margin-top: 8px;'>Updated at: {formatted_time}</p>", unsafe_allow_html=True)
-        st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: #2F80ED; color: white; padding: 10px 20px; border-radius: 8px; margin-top: 10px; text-decoration: none; width:99%;'>See Detail</a>", unsafe_allow_html=True)
+        
     else:
         st.warning("Tidak ada file audio yang ditemukan.")
+
+    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: #2F80ED; color: white; padding: 10px 20px; border-radius: 8px; margin-top: 10px; text-decoration: none; width:99%;'>See Detail</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: #FFFFFF; color: black; padding: 10px 20px; border-radius: 8px; margin-top: 5px; text-decoration: none; width:99%;'>If this activation is an error, click stop activation</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: red; color: white; padding: 10px 20px; border-radius: 8px; margin-top: 5px; text-decoration: none; width:99%;'>Nonaktif alat</a>", unsafe_allow_html=True)
 
 def card2():
     pipeline = [
