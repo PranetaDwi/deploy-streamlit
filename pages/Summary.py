@@ -32,7 +32,7 @@ with col1:
     st.markdown(f"""
         <div style="text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
             <h4>Total of Activation</h4>
-            <p>123</p>
+            <p style="font-size: 30px">100</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -40,7 +40,7 @@ with col2:
     st.markdown(f"""
         <div style="text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 10px;">
             <h4>Female User</h4>
-            <p>123</p>
+            <p style="font-size: 30px">45</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -48,7 +48,7 @@ with col3:
     st.markdown(f"""
         <div style="text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 10px;">
             <h4>Male User</h4>
-            <p>123</p>
+            <p style="font-size: 30px">100</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -56,8 +56,8 @@ with col3:
 st.subheader("Activation Distribution Map")
 
 df = pd.DataFrame(
-    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-    columns=["lat", "lon"],
+    np.random.randn(100, 2) / [100, 100] + [-7.7956, 110.3695],
+    columns=["lat", "lon"]
 )
 st.map(df)
 

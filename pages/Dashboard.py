@@ -70,7 +70,7 @@ audio_list = list(audio_cursor)
 
 def dashboardInitial():
     # TITLE
-    st.title("Aiovoice Profile")
+    st.title("Dashboard")
     st.markdown("---")
 
     st.subheader("Current Location")
@@ -121,9 +121,14 @@ def card1():
     else:
         st.warning("Tidak ada file audio yang ditemukan.")
 
-    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: #2F80ED; color: white; padding: 10px 20px; border-radius: 8px; margin-top: 10px; text-decoration: none; width:99%;'>See Detail</a>", unsafe_allow_html=True)
-    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: #FFFFFF; color: black; padding: 10px 20px; border-radius: 8px; margin-top: 5px; text-decoration: none; width:99%;'>If this activation is an error, click stop activation</a>", unsafe_allow_html=True)
-    st.markdown(f"<a href='#' style='display: inline-block; text-align: center; background-color: red; color: white; padding: 10px 20px; border-radius: 8px; margin-top: 5px; text-decoration: none; width:99%;'>Nonaktif alat</a>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.button("👁️ See Detail", use_container_width=True)
+
+    with col2:
+        st.button("⛔ Nonaktif alat", use_container_width=True)
+
+    st.markdown(f"<a href='#' style='display: inline-block; text-align: right; background-color: #FFFFFF; color: black; border-radius: 8px; margin-top: 5px; text-decoration: none; width:99%;'>If this activation is an error, click stop activation</a>", unsafe_allow_html=True)
 
 def card2():
     pipeline = [
@@ -196,7 +201,7 @@ def cardLocationDetailActivity():
 
     formatted_timestamp = timestamp.strftime("%Y-%m-%d %H:%M") if timestamp != "-" else "-"
 
-    st.title("Detail Activity")
+    st.title("Detail Activation")
     st.markdown("---")
 
     st.components.v1.html(f"""
@@ -341,7 +346,7 @@ def detailLocationAudioList():
 
                 with form_col2:
                     st.write("")  # spacer
-                    st.form_submit_button("Pilih", on_click=lambda d_id=activation_id: set_session(d_id))
+                    st.form_submit_button("Maps", on_click=lambda d_id=activation_id: set_session(d_id))
 
     with col2:
 

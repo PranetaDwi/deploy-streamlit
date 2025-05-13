@@ -79,6 +79,9 @@ def show_register_form():
         password = st.text_input("Password", type="password")
         device_id = st.text_input("ID Alat")
         device_key = st.text_input("Sandi Alat")
+        age = st.text_input("Usia")
+        gender = st.text_input("Jenis Kelamin")
+        telepon = st.text_input("Telepon")
         register_submit = st.form_submit_button("Register")
         if register_submit:
             if not email:
@@ -101,7 +104,11 @@ def show_register_form():
                         'device_key': device_key,
                         'email': email,
                         'password': password,
+                        'age': age,
+                        'gender': gender,
+                        'telepon': telepon,
                         "key_option": "tolong",
+                        'status': "Pemilik",
                         'timestamp': datetime.datetime.utcnow()
                     })
                     st.success("Registrasi berhasil! Silakan login.")
@@ -109,19 +116,28 @@ def show_register_form():
                     st.session_state['show_form'] = 'login'
                     st.rerun()
 
-def show_device_id_form():
-    st.info("Silakan Masukkan device id:")
+def show_family_form():
+    st.info("Silakan masukkan email dan device id:")
     with st.form("device_id_form"):
+        email = st.text_input("Email")
         device_id = st.text_input("Device ID")
         login_submit = st.form_submit_button("Submit")
         if login_submit:
-            if not device_id:
+            if not email:
+                st.warning("Email diisi!")
+            elif not device_id:
                 st.warning("Id Device diisi!")
             else:
-                st.session_state['device_id'] = device_id
-                st.session_state['show_form'] = "home_family"
-                st.success(f"Selamat datang Family")
-                st.rerun()
+                user = users_collection.find_one({'email': email, 'device_id': device_id, 'status': "Family" })
+                if user:
+                    st.session_state['email'] = email
+                    st.session_state['device_id'] = device_id
+                    st.session_state['show_form'] = "home_family"
+                    st.success(f"Selamat datang Family")
+                    st.rerun()
+                else:
+                    st.error("Data tidak ditemukan!")
+
 
 # Fungsi untuk menampilkan profil
 def show_profile_header():
@@ -157,14 +173,14 @@ def show_profile_account():
     user = users_collection.find_one({'email': st.session_state['email']})
 
     # Data
-    nama = "Praneta Dwi Indarti"
+    nama = user['name']
     email = user['email']
-    telepon = "0898887878787"
-    status = "Device Owner/Family"
+    telepon = user['telepon']
+    status = user['status']
 
     # Layout dengan 2 kolom
     with st.container():
-        st.markdown("### 💀 Profil Pengguna")
+        st.markdown("### Profil Pengguna")
         
         col1, col2, col3 = st.columns([1.2, 2, 1])
         
@@ -190,7 +206,10 @@ def show_profile_account():
 
 
 def show_profile_family():
-    st.subheader("👨‍👩 Keluarga Terdaftar")
+    st.subheader("Keluarga Terdaftar")
+
+    if st.button("👨‍👩‍👧‍👦 Tambah Keluarga"):
+        addFamily()
 
     col1, col2, col3 = st.columns([2, 2, 1])
     with col1:
@@ -200,16 +219,23 @@ def show_profile_family():
     with col3:
         st.markdown("**📱 Telepon**")
 
-    for i in range(4):  # ganti 4 dengan jumlah data
+    query = {"device_id": st.session_state['device_id'], "status": "Family"}
+    results = users_collection.find(query)
+
+    # Tampilkan data
+    for user in results:
+        name = user.get("name", "-")
+        email = user.get("email", "-")
+        phone = user.get("telepon", "-")
+        
         with st.container():
             col1, col2, col3 = st.columns([2, 2, 1])
             with col1:
-                st.write("Annisa Urohmah")
+                st.write(name)
             with col2:
-                st.write("annisa_urohmah@gmail.com")
+                st.write(email)
             with col3:
-                st.write("0986774635123")
-            st.divider()
+                st.write(phone)
 
 @st.dialog("Change Password")
 def edit_password():
@@ -254,6 +280,45 @@ def edit_password():
         else:
             st.error("Pengguna tidak ditemukan.")
 
+@st.dialog("Add Family")
+def addFamily():
+    with st.form("add_family_form"):
+        name = st.text_input("Name")
+        email = st.text_input("Email")
+        age = st.text_input("Usia")
+        gender = st.text_input("Jenis Kelamin")
+        telepon = st.text_input("Telepon")
+        register_submit = st.form_submit_button("Tambahkan Keluarga")
+        if register_submit:
+            if not name:
+                st.warning("Nama harus diisi!")
+            elif not email:
+                st.warning("Email harus diisi!")
+            elif not age:
+                st.warning("Usia harus diisi!")
+            elif not gender:
+                st.warning("Jenis Kelamin Alat harus diisi!")
+            elif not telepon:
+                st.warning("Telepon Alat harus diisi!")
+            else:
+                # Cek apakah email sudah terdaftar
+                existing_user = users_collection.find_one({'email': email})
+                if existing_user:
+                    st.warning("Email sudah terdaftar!")
+                else:
+                    # Registrasi berhasil
+                    result = users_collection.insert_one({
+                        'name': name,
+                        'device_id': st.session_state['device_id'],
+                        'email': email,
+                        'age': age,
+                        'gender': gender,
+                        'telepon': telepon,
+                        'status': "Family",
+                        'timestamp': datetime.datetime.utcnow()
+                    })
+                    st.success("Berhasil Menambahkan keluarga!")
+                    st.rerun()
 
 # Cek halaman berdasarkan session state
 if st.session_state['show_form'] == 'login':
@@ -270,6 +335,7 @@ elif st.session_state.get('show_form') == 'home':
     show_profile_family()
 elif st.session_state.get('show_form') == 'family':
     button_login_register()
-    show_device_id_form()
+    show_family_form()
 elif st.session_state.get('show_form') == 'home_family':
-    show_family()
+    show_profile_header()
+    show_profile_account()
