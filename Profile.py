@@ -204,6 +204,39 @@ def show_profile_account():
     # Divider untuk pembatas
     st.divider()
 
+def show_profile_account_for_family():
+    user = users_collection.find_one({'email': st.session_state['email']})
+
+    # Data
+    nama = user['name']
+    email = user['email']
+    telepon = user['telepon']
+    status = user['status']
+
+    # Layout dengan 2 kolom
+    with st.container():
+        st.markdown("### Profil Pengguna")
+        
+        col1, col2, col3 = st.columns([1.2, 2, 1])
+        
+        with col1:
+            st.markdown("**👤 Nama**")
+            st.markdown("**✉️ Email**")
+            st.markdown("**📞 Telepon**")
+            st.markdown("**💫 Status**")
+
+        with col2:
+            st.write(nama)
+            st.write(email)
+            st.write(telepon)
+            st.write(status)
+
+        with col3:
+            st.button("✏️ Edit Profil", use_container_width=True)
+
+    # Divider untuk pembatas
+    st.divider()
+
 
 def show_profile_family():
     st.subheader("Keluarga Terdaftar")
@@ -338,4 +371,4 @@ elif st.session_state.get('show_form') == 'family':
     show_family_form()
 elif st.session_state.get('show_form') == 'home_family':
     show_profile_header()
-    show_profile_account()
+    show_profile_account_for_family()
